@@ -1,4 +1,3 @@
-# i am in connector.py
 from bleak import BleakClient
 from datetime import datetime
 from utils import clear_screen
@@ -6,9 +5,9 @@ from utils import clear_screen
 HR_MEASUREMENT_UUID = "00002a37-0000-1000-8000-00805f9b34fb"
 
 class HeartRateMonitor:
-    def __init__(self):
+    def __init__(self, manager):
         self.client = None
-        self.data = []
+        self.manager = manager
 
     async def connect_to_device(self, device):
         self.client = BleakClient(device.address)
@@ -21,7 +20,7 @@ class HeartRateMonitor:
         heart_rate = self.decode_heart_rate(data)
         timestamp = datetime.now().strftime('%H:%M:%S.%f')
         timestamp = timestamp[:-3]  # Truncate microseconds to milliseconds
-        self.data.append((timestamp, heart_rate))
+        self.manager.log_data_point(timestamp, heart_rate)
         print(f"Received heart rate: {heart_rate} bpm at {timestamp}")
 
     def decode_heart_rate(self, data):
