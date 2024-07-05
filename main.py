@@ -2,12 +2,14 @@
 import asyncio
 from scanner import find_device_by_name
 from connector import HeartRateMonitor
+from workout_manager import WorkoutManager
 
 # this can be changed to target other heart rate monitors
 TARGET_DEVICE_NAME = "M7-08252"
 
 async def main():
     monitor = HeartRateMonitor()
+    manager = WorkoutManager()
     device = await find_device_by_name(TARGET_DEVICE_NAME)
     
     if device:
@@ -16,9 +18,9 @@ async def main():
         while True:
             action = input("Enter '1' to start workout, '2' to end workout, '3' to exit: ")
             if action == '1':
-                await monitor.start_workout()
+                await manager.start_workout()
             elif action == '2':
-                await monitor.end_workout()
+                await manager.end_workout()
             elif action == '3':
                 if monitor.client:
                     await monitor.client.disconnect()

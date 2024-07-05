@@ -31,19 +31,3 @@ class HeartRateMonitor:
         else:
             heart_rate = data[1]
         return heart_rate
-
-    async def start_workout(self):
-        self.data = []
-        self.start_time = datetime.now()
-        print("Workout started...")
-
-    async def end_workout(self):
-        end_time = datetime.now()
-        duration = end_time - self.start_time
-        print(f"Workout ended. Duration: {duration}")
-        for timestamp, heart_rate in self.data:
-            print(f"{timestamp}: {heart_rate} bpm")
-        if self.client:
-            await self.client.stop_notify(HR_MEASUREMENT_UUID)
-            await self.client.disconnect()
-            print("Disconnected from device.")
