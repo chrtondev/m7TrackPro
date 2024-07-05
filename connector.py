@@ -19,7 +19,8 @@ class HeartRateMonitor:
 
     def notification_handler(self, sender, data):
         heart_rate = self.decode_heart_rate(data)
-        timestamp = datetime.now().strftime('%H:%M:%S')
+        timestamp = datetime.now().strftime('%H:%M:%S.%f')
+        timestamp = timestamp[:-3]  # Truncate microseconds to milliseconds
         self.data.append((timestamp, heart_rate))
         print(f"Received heart rate: {heart_rate} bpm at {timestamp}")
 
