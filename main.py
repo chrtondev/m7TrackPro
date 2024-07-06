@@ -20,20 +20,10 @@ async def main():
             if action == '1':
                 manager.start_workout()
             elif action == '2':
-                data, duration = manager.end_workout()
-                
-                # Generate filename
-                filename = f"workout_data/workout_{manager.start_time.strftime('%Y-%m-%d_%H%M%S')}.csv"
-                
-                # Ensure the workout_data directory exists
-                os.makedirs(os.path.dirname(filename), exist_ok=True)
-                
-                # Log data to CSV
-                manager.log_to_csv(filename, data)
-                
+                await monitor.stop_notifications()
+                duration = manager.end_workout()
             elif action == '3':
-                if monitor.client:
-                    await monitor.client.disconnect()
+                await monitor.stop_notifications()
                 break
             else:
                 print("Invalid input. Please try again.")

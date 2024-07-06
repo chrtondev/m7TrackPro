@@ -16,12 +16,20 @@ class HeartRateMonitor:
         clear_screen()
         print("Connected and receiving data...")
 
+    async def stop_notifications(self):
+        if self.client and self.client.is_connected:
+            try:
+                await self.client.stop_notify(HR_MEASUREMENT_UUID)
+                await self.client.disconnect()
+            except AttributeError:
+                print("Failed to stop notifications or disconnect. Services might not be available.")
+        else:
+            print("Client is not connected or already disconnected.")
+
     def notification_handler(self, sender, data):
         heart_rate = self.decode_heart_rate(data)
-        timestamp = datetime.now().strftime('%H:%M:%S.%f')
-        timestamp = timestamp[:-3]  # Truncate microseconds to milliseconds
-        self.manager.log_data_point(timestamp, heart_rate)
-        print(f"Received heart rate: {heart_rate} bpm at {timestamp}")
+        print(f"Received data: HeartRate={heart_rate}")  # Debug print
+        self.manager.log_data_point(heart_rate)
 
     def decode_heart_rate(self, data):
         flags = data[0]
