@@ -19,19 +19,19 @@ class WorkoutManager:
         
         # Open the CSV file for appending
         self.csv_file = open(filename, 'a', newline='')
-        self.csv_writer = csv.DictWriter(self.csv_file, fieldnames=["Time", "HeartRate"])
+        self.csv_writer = csv.DictWriter(self.csv_file, fieldnames=["Number", "HeartRate"])
         self.csv_writer.writeheader()
         self.workout_active = True
+        self.data_point_index = 0
         print(f"Workout started at {self.start_time}. Logging to {filename}")
 
     def log_data_point(self, heart_rate):
         if self.workout_active and self.csv_writer:
-            elapsed_time = datetime.now() - self.start_time
-            timestamp = str(elapsed_time).split('.')[0] + '.' + str(elapsed_time.microseconds // 1000).zfill(3)
-            print(f"Logging data point: Time={timestamp}, HeartRate={heart_rate}")  # Debug print
-            self.csv_writer.writerow({"Time": timestamp, "HeartRate": heart_rate})
+            print(f"Logging data point: Number={self.data_point_index}, HeartRate={heart_rate}")  # Debug print
+            self.csv_writer.writerow({"Number": self.data_point_index, "HeartRate": heart_rate})
             self.csv_file.flush()  # Ensure data is written to disk
-            print(f"Logged heart rate: {heart_rate} bpm at {timestamp}")
+            print(f"Logged heart rate: {heart_rate} bpm at data point {self.data_point_index}")
+            self.data_point_index += 1
 
     def end_workout(self):
         self.workout_active = False
