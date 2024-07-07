@@ -1,5 +1,6 @@
 # workout_manager.py
 import csv
+import json
 from datetime import datetime
 import os
 
@@ -9,6 +10,8 @@ class WorkoutManager:
         self.csv_file = None
         self.csv_writer = None
         self.workout_active = False
+        self.data_point_index = 0
+        self.heart_rates = []
 
     def start_workout(self):
         self.start_time = datetime.now()
@@ -37,10 +40,11 @@ class WorkoutManager:
         self.workout_active = False
         end_time = datetime.now()
         duration = end_time - self.start_time
-        print(f"Workout ended. Duration: {duration}")
+        duration_str = str(duration).split('.')[0]
+        print(f"Workout ended. Duration: {duration_str}")
         
         # Close the CSV file
         if self.csv_file:
             self.csv_file.close()
         
-        return duration
+        return duration_str, self.start_time.strftime('%Y-%m-%d_%H%M%S'), self.heart_rates
